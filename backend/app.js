@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import express from "express"
-import connectDB from './config/db.js'
+import connectDB from './src/config/db.js'
 import { setServers } from "node:dns/promises";
 
 setServers(["1.1.1.1", "8.8.8.8"]);
