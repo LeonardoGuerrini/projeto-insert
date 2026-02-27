@@ -2,8 +2,8 @@ import bcrypt from "bcrypt"
 import { UsuarioRepository as usuarioRepo } from "../repositories/usuario";
 
 class UsuarioService {
-    async buscarUsuarioPorId(_id){
-        const usuario = await usuarioRepo.buscarUsuarioPorId(_id)
+    async buscarUsuarioPorUsername(usuario){
+        const usuario = await usuarioRepo.buscarUsuarioPorUsername(usuario)
         if(!usuario) throw new Error("Nenhum usuário encontrado.");
 
         return usuario
@@ -16,6 +16,8 @@ class UsuarioService {
         if(!email) throw new Error('E-mail é obrigatório')
         if(!senha) throw new Error('Senha é obrigatória');
         if(!repeteSenha) throw new Error('É necessário repetir a senha para confirmação');
+
+        if(senha.length < 6) throw new Error('A senha precisa ter 6 ou mais caracteres');
 
         if(senha !== repeteSenha) throw new Error('As senhas não coincidem');
 
@@ -34,5 +36,22 @@ class UsuarioService {
             email: email,
             senha: senhaCriptografada
         })
+    }
+
+    async atualizarUsuario(usuario, data){
+        const { nome, email, senha, repeteSenha } = data
+
+        if(!nome) throw new Error('Nome é obrigatório')
+        if(!email) throw new Error('E-mail é obrigatório')
+        if(!senha) throw new Error('Senha é obrigatória');
+        if(!repeteSenha) throw new Error('É necessário repetir a senha para confirmação');
+
+        const emailExistente = await usuarioRepo.buscarUsuarioPorEmail(email)
+        if(email === emailExistente) throw new Error('Este e-mail já está em uso');
+
+        const contaUsuario = await usuarioRepo.buscarUsuarioPorUsername(usuario)
+        const comparacaoSenha = await bcrypt.compare(senha, contaUsuario.senha)
+        if(comparacaoSenha) throw new Error('A senha digitada é a que está sendo utilizada atualmente');
+
     }
 }
