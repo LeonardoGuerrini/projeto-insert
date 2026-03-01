@@ -1,0 +1,28 @@
+{
+  "name": "projeto-insert",
+  "version": "1.0.0",
+  "description": "Sistema simples de gerenciamento de usuários e posts",
+  "homepage": "https://github.com/LeonardoGuerrini/projeto-insert#readme",
+  "bugs": {
+    "url": "https://github.com/LeonardoGuerrini/projeto-insert/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeonardoGuerrini/projeto-insert.git"
+  },
+  "license": "ISC",
+  "author": "Leonardo Guerini",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.1.0",
+    "mongoose": "^9.2.2"
+  }
+}
