@@ -32,7 +32,8 @@ export const criarUsuario = async (req, res) => {
 
 export const atualizarUsuario = async (req, res) => {
     try{
-        const atualizar = await usuarioService.criarUsuario(req.body)
+        const { id } = req.params
+        await usuarioService.criarUsuario(id, req.body)
         res.status(201).json({ message: "Usuário editado com sucesso!" })
     } catch(err){
         console.log('Erro ao editar usuário:', err)

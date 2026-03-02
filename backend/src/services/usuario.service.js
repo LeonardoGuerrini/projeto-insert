@@ -43,12 +43,11 @@ class UsuarioService {
         })
     }
 
-    async atualizarUsuario(usuario, data){
+    async atualizarUsuario(id, data){
         const { nome, email, senha, repeteSenha } = data
 
-        // verificar se o usuário que foi passado realmente existe
-        // const existeUsuario = await usuarioRepo.buscarUsuarioPorUsername(usuario)
-        // if(!existeUsuario) throw new Error('Usuário inexistente.')
+        const existeUsuario = await usuarioRepo.buscarUsuarioPorId(id)
+        if(!existeUsuario) throw new Error('Usuário inexistente.')
 
         if(!nome) throw new Error('Nome é obrigatório')
         if(!email) throw new Error('E-mail é obrigatório')
@@ -63,7 +62,7 @@ class UsuarioService {
 
         const contaUsuario = await usuarioRepo.buscarUsuarioPorUsername(usuario)
         const comparacaoSenha = await bcrypt.compare(senha, contaUsuario.senha)
-        if(!comparacaoSenha) throw new Error('A senha digitada é a que está sendo utilizada atualmente');
+        if(!comparacaoSenha) throw new Error('Digite uma senha que nunca foi utilizada');
 
         const salt = await bcrypt.genSalt(10)
         const senhaCriptografada = await bcrypt.hash(senha, salt)
