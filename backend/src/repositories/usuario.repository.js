@@ -1,6 +1,11 @@
-import { UsuarioSchema as Usuario } from "../models/usuario.model"
+import { Usuario } from "../models/usuario.model.js"
 
-export class UsuarioRepository {
+class UsuarioRepository {
+
+    async buscarTodosUsuarios(){
+        return await Usuario.find()
+    }
+
     async buscarUsuarioPorId(_id){
         return await Usuario.findById(_id)
     }
@@ -25,3 +30,5 @@ export class UsuarioRepository {
         return await Usuario.findByIdAndDelete(_id)
     }
 }
+
+export const usuarioRepo = new UsuarioRepository()

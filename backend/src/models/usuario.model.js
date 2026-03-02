@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 const { Schema } = mongoose
 
-export const UsuarioSchema = new Schema({
+const UsuarioSchema = new Schema({
     nome: {
         type: String,
         required: true
@@ -19,9 +19,7 @@ export const UsuarioSchema = new Schema({
     senha: {
         type: String,
         required: true,
-    },
-    repeteSenha: {
-        type: String,
-        required: true
     }
 })
+
+export const Usuario = mongoose.model("Usuario", UsuarioSchema);
