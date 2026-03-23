@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 
-export const generatedToken = (id, usuario) => {
+export const generateToken = (id, usuario) => {
     const key = process.env.JWT_SECRET
 
     if(typeof key !== 'string' || key.length === 0) throw new Error('JWT inválido')
@@ -8,7 +8,7 @@ export const generatedToken = (id, usuario) => {
     const token = jwt.sign(
         { id, usuario },
         key,
-        { expiresIn: process.env.JWT_EXPIRES }
+        { expiresIn: '1d' }
     )
     return token
 }

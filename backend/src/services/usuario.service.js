@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 import { usuarioRepo } from "../repositories/usuario.repository.js";
-import { generatedToken } from "../middlewares/token.middleware.js"
+import { generateToken } from "../middlewares/token.middleware.js";
 
 class UsuarioService {
 
@@ -46,15 +46,14 @@ class UsuarioService {
 
     async loginUsuario(usuario, senha) {
         const checkUsuario = await usuarioRepo.buscarUsuarioPorUsername(usuario)
-        if(!checkUsuario) throw new Error('Usuário inexistente ou senha incorreta');
+        if (!checkUsuario) throw new Error('Usuário inexistente ou senha incorreta');
 
         const passwordMatch = await bcrypt.compare(senha, checkUsuario.senha || '')
-        if(!passwordMatch) throw new Error('Usuário inexistente ou senha incorreta');
-
-
-        const token = generatedToken(checkUsuario.id, checkUsuario.usuario)
-        return { usuario: { id: checkUsuario.id , usuario: checkUsuario.usuario }, token }
+        if (!passwordMatch) throw new Error('Usuário inexistente ou senha incorreta');
         
+        const token = generateToken(checkUsuario.id, checkUsuario.usuario)
+        return { usuario: { id: checkUsuario.id, usuario: checkUsuario.usuario }, token }
+
     }
 
     async atualizarUsuario(id, data) {

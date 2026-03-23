@@ -1,20 +1,29 @@
 import jwt from "jsonwebtoken"
 
-export async function authMiddleware(req, res, next) {
+export function verifyToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const secret = process.env.JWT_SECRET
+
+    if (!secret) {
+        return res.status(500).json({ message: 'JWT_SECRET não definido' })
+    }
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ message: "Bearer token ausente ou inválido" })
     }
 
-    const token = authHeader && authHeader.split(' ')[1]
+    const token = authHeader.split(' ')[1]
 
-    jwt.verify(token, secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ message: "Token inválido ou expirado" })
+    try {
+        const decoded = jwt.verify(token, secret)
+        req.user = {
+            id: decoded.id,
+            usuario: decoded.usuario
         }
-        req.user = decoded
+
         next()
-    })
+    } catch (err) {
+        return res.status(401).json({ message: 'Token inválido ou expirado' })
+    }
+
 }
