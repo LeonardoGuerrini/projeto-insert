@@ -1,10 +1,7 @@
 import express from "express"
-import dotenv from "dotenv"
 import connectDB from './src/config/db.js'
 import routes from './src/routes.js'
 import { setServers } from "node:dns/promises";
-
-dotenv.config()
 
 setServers(["1.1.1.1", "8.8.8.8"]);
 
