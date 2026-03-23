@@ -58,35 +58,22 @@ class UsuarioService {
     }
 
     async atualizarUsuario(id, data) {
-        const { nome, email, senha, repeteSenha } = data
+        const { nome, email } = data
 
         const existeUsuario = await usuarioRepo.buscarUsuarioPorId(id)
-        if (!existeUsuario) throw new Error('Usuário inexistente.')
+        if (!existeUsuario) throw new Error('Usuário inexistente.');
 
-        if (!nome) throw new Error('Nome é obrigatório')
-        if (!email) throw new Error('E-mail é obrigatório')
-        if (!senha) throw new Error('Senha é obrigatória');
-        if (!repeteSenha) throw new Error('É necessário repetir a senha para confirmação');
+        if (!nome) throw new Error('Nome é obrigatório');
+        if (!email) throw new Error('E-mail é obrigatório');
 
         const emailExistente = await usuarioRepo.buscarUsuarioPorEmail(email)
-        if (email === emailExistente) throw new Error('Este e-mail já está em uso');
+        if (emailExistente && id !== emailExistente.id) throw new Error('Este e-mail já está em uso');
 
-        if (senha.length < 6) throw new Error('A senha precisa ter 6 ou mais caracteres');
-        if (senha !== repeteSenha) throw new Error('As senhas não coincidem');
-
-        const contaUsuario = await usuarioRepo.buscarUsuarioPorUsername(usuario)
-        const comparacaoSenha = await bcrypt.compare(senha, contaUsuario.senha)
-        if (!comparacaoSenha) throw new Error('Digite uma senha que nunca foi utilizada');
-
-        const salt = await bcrypt.genSalt(10)
-        const senhaCriptografada = await bcrypt.hash(senha, salt)
-
-        return await usuarioRepo.criarUsuario({
+        return await usuarioRepo.atualizarUsuario({
+            id,
             nome: nome,
-            email: email,
-            senha: senhaCriptografada
+            email: email
         })
-
     }
 
     async deletarUsuario(id) {
